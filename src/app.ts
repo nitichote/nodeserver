@@ -28,6 +28,7 @@ import deleteRoute from './routes/deleteRoute';
 import dentclinicRoute from './routes/dentclinic/dentclinic';
 import hofficeRoute from './routes/hoffice/hoffice';
 import dentssjRoute from './routes/dentssj/dentssj';
+import gisspaceRoute from './routes/gisspace/gisspace';
 // Assign router to the express.Router() instance
 const app: express.Application = express();
 
@@ -86,6 +87,7 @@ let checkAuth = (req: Request, res: Response, next: NextFunction) => {
     }
   );
 };
+app.use('/gisspace', gisspaceRoute);
 app.use('/dentssj', dentssjRoute);
 app.use('/hoffice', hofficeRoute);
 app.use('/dentclinic', dentclinicRoute);

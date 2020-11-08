@@ -134,100 +134,7 @@ router.get('/', async (req: Request, res: Response) => {
       message: 'there is an Error Connect to Database is.no ok',
     });
   }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-router.get('/reportview/:rid', async (req: Request, res: Response) => {
-  const db = req.db4;
-
-  const r_id = req.params.rid;
-  let sql = '';
-  
-  try {
-    sql = `select * from reportview where r_id=${r_id}`;
-    const raw = await db.raw(sql);
-const q = raw[0][0]['sql'];
-const raw2 = await db.raw(q);
-
-    res.send({ ok: true, message:raw2[0] });
-  } catch (error) {
-    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
-  }
-  // res.send({ ok: false, message: 'Error Connect to Database is.' });
-});
-router.get('/agegroup', async (req: Request, res: Response) => {
-  const db = req.db4;
-  try {
-    const raw = await db.raw(`SELECT t.denttype, t.age_group, COUNT(*) AS age_count
-    FROM
-    (
-        SELECT denttype,
-            CASE WHEN 2563- yearbrth BETWEEN 20 AND 25
-                 THEN '20-25'
-                 WHEN 2563- yearbrth BETWEEN 26 AND 35
-                 THEN '26-35'
-                 WHEN 2563- yearbrth BETWEEN 36 AND 45
-                 THEN '36-45'
-                 WHEN 2563- yearbrth BETWEEN 46 AND 55
-                 THEN '46-55'
-                 WHEN 2563- yearbrth BETWEEN 56 AND 60
-                 THEN '56-60'
-                 ELSE 'Other'
-            END AS age_group
-        FROM contacts
-    ) t
-    GROUP BY t.age_group,t.denttype   `);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-router.get('/reportjob', async (req: Request, res: Response) => {
-  const db = req.db4;
-  try {
-    const raw = await db.raw(`select pvname,pvcode,job, count(*) as cnt from contacts group by job,pvcode
-    `);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-
-
-router.get('/reportdentnum', async (req: Request, res: Response) => {
-  const db = req.db4;
-  try {
-    const raw = await db.raw(`select cn.*,p.ssjsize,p.assistnum,p.isclinic,p.khet,p.pak from (select pvcode,pvname,max(dateupdate) as dupdate,count(if(denttype='ทันตแพทย์',1,null)) as dentist,count(if(denttype='นวก(ทันต)',1,null)) as  vichakan,count(if(denttype='ทันตาภิบาล',1,null)) as tunta from contacts group by pvcode) cn,province p where cn.pvcode=p.pvcode
-    `);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-
-router.get('/dentnum', async (req: Request, res: Response) => {
-  const db = req.db4;
-  try {
-    const raw = await db.raw(`select pvcode,pvname,count(if(denttype='ทันตแพทย์',1,null)) as dentist,count(if(denttype='นวก(ทันต)',1,null)) as  vichakan,count(if(denttype='ทันตาภิบาล',1,null)) as tunta from contacts group by pvcode`);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+  res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
 });
 router.get('/contacts', async (req: Request, res: Response) => {
     const db = req.db4;
@@ -240,7 +147,7 @@ router.get('/contacts', async (req: Request, res: Response) => {
         message: 'there is an Error Connect to Database is.no ok',
       });
     }
-    // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+    res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
   });
   router.get('/province', async (req: Request, res: Response) => {
     const db = req.db4;
@@ -253,7 +160,7 @@ router.get('/contacts', async (req: Request, res: Response) => {
         message: 'there is an Error Connect to Database is.no ok',
       });
     }
-    // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+    res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
   });
 router.get('/contact:id', async (req: Request, res: Response) => {
     const db = req.db4;
@@ -267,7 +174,7 @@ router.get('/contact:id', async (req: Request, res: Response) => {
         message: 'there is an Error Connect to Database is.no ok',
       });
     }
-    // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+    res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
   });
 router.get('/province:provcode', async (req: Request, res: Response) => {
     const db = req.db4;
@@ -281,7 +188,7 @@ router.get('/province:provcode', async (req: Request, res: Response) => {
         message: 'there is an Error Connect to Database is.no ok',
       });
     }
-    // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+    res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
   });
 router.get('/patient/:hn', async (req: Request, res: Response) => {
   const db = req.db4;
@@ -301,7 +208,7 @@ router.get('/patient/:hn', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  // res.send({ ok: false, message: 'Error Connect to Database is.' });
+  res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/gsearch/:con/:dname', async (req: Request, res: Response) => {
   const db = req.db4;
@@ -324,7 +231,7 @@ router.get('/gsearch/:con/:dname', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  // res.send({ ok: false, message: 'Error Connect to Database is.' });
+  res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/offices', async (req: Request, res: Response) => {
   const db = req.db4;

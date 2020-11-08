@@ -14,6 +14,39 @@ const putmodel = new PutModel();
   res.send({ ok: true, message: 'Welcome to RESTful api server!', code: HttpStatus.OK });
 }); */
 
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now()+'-'+file.originalname)
+    }
+})
+var upload = multer({ storage: storage }).array('userfiles', 10);
+
+
+router.post('/upload', function (req, res) {
+  upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        return res.status(500).json(err);
+      } else if (err) {
+        // An unknown error occurred when uploading.
+        return res.status(500).json(err);
+      }
+      
+      let uploadedFiles = [];
+    
+      for(let item of req['files']) {
+          uploadedFiles.push({filename: item.originalname});
+      }
+
+      // Everything went fine.
+      res.json({progress: 100, files: uploadedFiles});
+  })
+});
+
 router.post('/insertUpdate', async (req: Request, res: Response) => {
   let db = req.db2;
   let data = req.body.data;
@@ -93,6 +126,41 @@ router.post('/del', async (req: Request, res: Response) => {
     res.send({ ok: false, rows: error, code: HttpStatus.NOT_FOUND });
   }
 });
+router.get('/reportview/:rid', async (req: Request, res: Response) => {
+  const db = req.db2;
+
+  const r_id = req.params.rid;
+  let sql = '';
+  
+  try {
+    sql = `select * from reportview where r_id=${r_id}`;
+    const raw = await db.raw(sql);
+const q = raw[0][0]['sql'];
+const raw2 = await db.raw(q);
+
+    res.send({ ok: true, message:raw2[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  }
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
+});
+router.post('/sql', async (req: Request, res: Response) => {
+  let db = req.db2;
+  // รูปแบบข้อมูล
+  let data = req.body;
+
+  console.log(data.sql);
+
+let sql = data.sql;
+  //let dataUpdate = data.whereName;
+ 
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  }
+});
 router.post('/upload', async (req: Request, res: Response) => {
   let db = req.db2;
   // รูปแบบข้อมูล
@@ -134,7 +202,7 @@ router.get('/', async (req: Request, res: Response) => {
       message: 'there is an Error Connect to Database is.no ok',
     });
   }
-  res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
 });
 router.get('/patient/:hn', async (req: Request, res: Response) => {
   const db = req.db2;
@@ -158,7 +226,7 @@ router.get('/patient/:hn', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/gsearch/:con/:dname', async (req: Request, res: Response) => {
   const db = req.db2;
@@ -181,7 +249,7 @@ router.get('/gsearch/:con/:dname', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/offices', async (req: Request, res: Response) => {
   const db = req.db2;
@@ -250,7 +318,7 @@ router.get('/school/show', async (req: Request, res: Response) => {
 router.get('/schoolenv/show', (req: Request, res: Response) => {
   const db = req.db2;
   
-  let sql = `select s.schoolid,s.schname,s.tag,e.ip,e.lastupdate,e.userpin,e.isnocoke,e.isnosweet,e.isnocandy,e.rpyear,s.tamboncode,a.code,a.name,h.off_name,s.hcode from schooldata s inner join ampall a on left(s.tamboncode,4) = a.code inner join hospitalcpho h on s.hcode = h.off_id left outer join school_env e on s.schoolid = e.schoolid and e.rpyear='2563' order by h.off_id,a.code `;
+  let sql = `select s.schoolid,s.schname,s.tag,e.ip,e.lastupdate,e.userpin,e.isnocoke,e.isnosweet,e.isnocandy,e.rpyear,s.tamboncode,a.code,a.name,h.off_name,s.hcode from (select sc.* from schooldata sc inner join schclass c on sc.schoolid=c.schoolid where  c.m6=0 and sc.schtypecode='1001') s  inner join ampall a on left(s.tamboncode,4) = a.code inner join hospitalcpho h on s.hcode = h.off_id left outer join school_env e on s.schoolid = e.schoolid  and e.rpyear='2563' order by h.off_id,a.code `;
   //let sql = `select s.schoolid,s.schname,s.tag,s.tamboncode,a.code,a.name,h.off_name,s.hcode,e.* from schooldata s inner join ampall a on left(s.tamboncode,4) = a.code inner join hospitalcpho h on s.hcode = h.off_id left outer join school_env e on s.schoolid = e.schoolid and e.rpyear='2563' order by h.off_id,a.code `;
   
   db.raw(sql)
@@ -301,7 +369,7 @@ router.get(
     } catch (error) {
       res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
     }
-    res.send({ ok: false, message: 'Error Connect to Database is.' });
+    // res.send({ ok: false, message: 'Error Connect to Database is.' });
   }
 );
 router.get('/ohsp', async (req: Request, res: Response) => {
@@ -314,7 +382,7 @@ router.get('/ohsp', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 
 router.get('/ohsp/:denttopicid', async (req: Request, res: Response) => {
@@ -329,7 +397,7 @@ router.get('/ohsp/:denttopicid', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/specpersons', async (req: Request, res: Response) => {
   const db = req.db2;
@@ -341,7 +409,7 @@ router.get('/specpersons', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/dentmat', async (req: Request, res: Response) => {
   const db = req.db2;
@@ -352,9 +420,9 @@ router.get('/dentmat', async (req: Request, res: Response) => {
     res.send({ ok: true, message: raw[0] });
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
-    res.send({ ok: false, message: 'Error Connect to Database iscc.' });
+    // res.send({ ok: false, message: 'Error Connect to Database iscc.' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/tableshow', async (req: Request, res: Response) => {
   const db = req.db2;
@@ -365,7 +433,7 @@ router.get('/tableshow', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/tableshow/:tbl', async (req: Request, res: Response) => {
   const db = req.db2;
@@ -376,7 +444,7 @@ router.get('/tableshow/:tbl', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 router.get('/kn', async (req: Request, res: Response) => {
   const db = req.db2;
@@ -386,7 +454,7 @@ router.get('/kn', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 
 router.get('/x/:a', async (req: Request, res: Response) => {
@@ -398,7 +466,7 @@ router.get('/x/:a', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 
 router.post('/', async (req: Request, res: Response) => {
@@ -411,7 +479,7 @@ router.post('/', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 
 router.post('/dels', async (req: Request, res: Response) => {
@@ -423,7 +491,7 @@ router.post('/dels', async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.' });
   }
-  res.send({ ok: false, message: 'Error Connect to Database is.' });
+  // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
 
 router.get('/gen-token', async (req: Request, res: Response) => {
