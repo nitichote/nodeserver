@@ -153,28 +153,38 @@ const raw2 = await db.raw(q);
   }
   // res.send({ ok: false, message: 'Error Connect to Database is.' });
 });
-router.get('/agegroup', async (req: Request, res: Response) => {
-  const db = req.db4;
+
+
+router.get('/hoscpho', async (req: Request, res: Response) => {
+  const db = req.db6;
   try {
-    const raw = await db.raw(`SELECT t.denttype, t.age_group, COUNT(*) AS age_count
-    FROM
-    (
-        SELECT denttype,
-            CASE WHEN 2563- yearbrth BETWEEN 20 AND 25
-                 THEN '20-25'
-                 WHEN 2563- yearbrth BETWEEN 26 AND 35
-                 THEN '26-35'
-                 WHEN 2563- yearbrth BETWEEN 36 AND 45
-                 THEN '36-45'
-                 WHEN 2563- yearbrth BETWEEN 46 AND 55
-                 THEN '46-55'
-                 WHEN 2563- yearbrth BETWEEN 56 AND 60
-                 THEN '56-60'
-                 ELSE 'Other'
-            END AS age_group
-        FROM contacts
-    ) t
-    GROUP BY t.age_group,t.denttype   `);
+    const raw = await db.raw(`select h.*,a.name as ampname,a.code as ampcode from hospitalcpho h inner join ampall a on h.distid =a.code order by a.code  `);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({
+      ok: false,
+      message: 'there is an Error Connect to Database is.no ok',
+    });
+  }
+  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+});
+router.get('/amp', async (req: Request, res: Response) => {
+  const db = req.db6;
+  try {
+    const raw = await db.raw(`select code as ampcode ,name as ampname from ampall where left(code,2)='36' `);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({
+      ok: false,
+      message: 'there is an Error Connect to Database is.no ok',
+    });
+  }
+  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+});
+router.get('/kpi_rpst_set', async (req: Request, res: Response) => {
+  const db = req.db6;
+  try {
+    const raw = await db.raw(`SELECT * from tbl_ohsp where reportid in(select id from rep_rpst where rpst='1') `);
     res.send({ ok: true, message: raw[0] });
   } catch (error) {
     res.send({

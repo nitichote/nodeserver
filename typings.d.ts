@@ -7,6 +7,7 @@ declare module 'express' {
     db3: any; // Actually should be something like `multer.Body`
     db4: any; // Actually should be something like `multer.Body`
     db5: any; // Actually should be something like `multer.Body`
+    db6:any;
     knex: Knex;
     decoded: any; // Actually should be something like `multer.Files`
   }

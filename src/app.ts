@@ -20,7 +20,7 @@ import { Jwt } from './models/jwt';
 import indexRoute from './routes/index';
 import loginRoute from './routes/login';
 import requestRoute from './routes/request';
-
+import kpiscoreRoute from './routes/kpiscore/kpiscore';
 import kpiRoute from './routes/kpi/kpi';
 import updateRoute from './routes/updateRoute';
 import insertRoute from './routes/insertRoute';
@@ -29,6 +29,7 @@ import dentclinicRoute from './routes/dentclinic/dentclinic';
 import hofficeRoute from './routes/hoffice/hoffice';
 import dentssjRoute from './routes/dentssj/dentssj';
 import gisspaceRoute from './routes/gisspace/gisspace';
+
 // Assign router to the express.Router() instance
 const app: express.Application = express();
 
@@ -56,6 +57,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   req.db3 = connetion.db('db_dentalspec');
   req.db4 = connetion.db('db_dentssjclub');
   req.db5 = connetion.db('db_dentalspec');
+  req.db6 = connetion.db('db_kpirank');
   next();
 });
 
@@ -87,6 +89,7 @@ let checkAuth = (req: Request, res: Response, next: NextFunction) => {
     }
   );
 };
+app.use('/kpiscore', kpiscoreRoute);
 app.use('/gisspace', gisspaceRoute);
 app.use('/dentssj', dentssjRoute);
 app.use('/hoffice', hofficeRoute);

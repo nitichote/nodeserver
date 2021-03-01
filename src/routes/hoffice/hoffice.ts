@@ -7,7 +7,7 @@ import { PutModel } from '../../models/putModel';
 var formidable = require('formidable');
 var sharp = require('sharp');
 const jwt = new Jwt();
-
+var fs =require('fs');
 const router: Router = Router();
 const putmodel = new PutModel();
 /* router.get('/', (req: Request, res: Response) => {
