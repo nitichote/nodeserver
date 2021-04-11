@@ -318,7 +318,7 @@ router.get('/school/show', async (req: Request, res: Response) => {
 router.get('/schoolenv/show', (req: Request, res: Response) => {
   const db = req.db2;
   
-  let sql = `select s.schoolid,s.schname,s.tag,e.ip,e.lastupdate,e.userpin,e.isnocoke,e.isnosweet,e.isnocandy,e.rpyear,s.tamboncode,a.code,a.name,h.off_name,s.hcode from (select sc.* from schooldata sc inner join schclass c on sc.schoolid=c.schoolid where  c.m6=0 and sc.schtypecode='1001') s  inner join ampall a on left(s.tamboncode,4) = a.code inner join hospitalcpho h on s.hcode = h.off_id left outer join school_env e on s.schoolid = e.schoolid  and e.rpyear='2563' order by h.off_id,a.code `;
+  let sql = `select s.schoolid,s.schname,s.tag,e.ip,e.lastupdate,e.userpin,e.toothbrush,e.isnocoke,e.isnosweet,e.isnocandy,e.rpyear,s.tamboncode,a.code,a.name,h.off_name,s.hcode from (select sc.* from schooldata sc inner join schclass c on sc.schoolid=c.schoolid where  c.m6=0 and sc.schtypecode='1001') s  inner join ampall a on left(s.tamboncode,4) = a.code inner join hospitalcpho h on s.hcode = h.off_id left outer join school_env e on s.schoolid = e.schoolid  and e.rpyear='2563' order by h.off_id,a.code `;
   //let sql = `select s.schoolid,s.schname,s.tag,s.tamboncode,a.code,a.name,h.off_name,s.hcode,e.* from schooldata s inner join ampall a on left(s.tamboncode,4) = a.code inner join hospitalcpho h on s.hcode = h.off_id left outer join school_env e on s.schoolid = e.schoolid and e.rpyear='2563' order by h.off_id,a.code `;
   
   db.raw(sql)

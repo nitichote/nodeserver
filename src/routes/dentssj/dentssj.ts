@@ -203,8 +203,7 @@ router.get('/reportjob', async (req: Request, res: Response) => {
 router.get('/reportdentnum', async (req: Request, res: Response) => {
   const db = req.db4;
   try {
-    const raw = await db.raw(`select cn.*,p.ssjsize,p.assistnum,p.isclinic,p.khet,p.pak from (select pvcode,pvname,max(dateupdate) as dupdate,count(if(denttype='ทันตแพทย์',1,null)) as dentist,count(if(denttype='นวก(ทันต)',1,null)) as  vichakan,count(if(denttype='ทันตาภิบาล',1,null)) as tunta from contacts group by pvcode) cn,province p where cn.pvcode=p.pvcode
-    `);
+    const raw = await db.raw(`select cn.*,p.ssjsize,p.assistnum,p.isclinic,p.khet,p.pak from (select pvcode,pvname,max(dateupdate) as dupdate,count(if(denttype='ทันตแพทย์',1,null)) as dentist,count(if(denttype='นวก',1,null)) as  vichakan,count(if(denttype='จพง.ทันตสาธารณสุข(ทันตาภิบาล)',1,null)) as tunta,count(if(denttype='ตำแหน่งอื่น',1,null)) as others ,count(if(denttype='ผู้ช่วยทันตกรรม',1,null)) as assist  from contacts group by pvcode) cn,province p where cn.pvcode=p.pvcode `);
     res.send({ ok: true, message: raw[0] });
   } catch (error) {
     res.send({
@@ -218,7 +217,7 @@ router.get('/reportdentnum', async (req: Request, res: Response) => {
 router.get('/dentnum', async (req: Request, res: Response) => {
   const db = req.db4;
   try {
-    const raw = await db.raw(`select pvcode,pvname,count(if(denttype='ทันตแพทย์',1,null)) as dentist,count(if(denttype='นวก(ทันต)',1,null)) as  vichakan,count(if(denttype='ทันตาภิบาล',1,null)) as tunta from contacts group by pvcode`);
+    const raw = await db.raw(`select pvcode,pvname,count(if(denttype='ทันตแพทย์',1,null)) as dentist,count(if(denttype='นวก',1,null)) as  vichakan,count(if(denttype='จพง.ทันตสาธารณสุข(ทันตาภิบาล)',1,null)) as tunta,count(if(denttype='ตำแหน่งอื่น',1,null)) as others ,count(if(denttype='ผู้ช่วยทันตกรรม',1,null)) as assist from contacts group by pvcode`);
     res.send({ ok: true, message: raw[0] });
   } catch (error) {
     res.send({

@@ -1,12 +1,18 @@
 
 import app from '../app';
-import * as http from 'http';
-
+//import * as https from 'https'; // https
+ import * as http from 'http';
+import * as fs from 'fs';
+ /* var https_options = {
+  key: fs.readFileSync("/etc/httpd/ssl/privatekey.key"),
+  cert: fs.readFileSync("/etc/httpd/ssl/certificate.crt"),
+  ca: fs.readFileSync('/etc/httpd/ssl/intermediate.crt')
+};  */
 const port = normalizePort(+process.env.PORT || 3000);
 app.set('port', port);
 
-var server = http.createServer(app);
-
+//var server = https.createServer( https_options,app); // https
+var server = http.createServer( app);
 server.listen(port, onListening);
 server.on('error', onError);
 
