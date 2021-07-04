@@ -14,6 +14,8 @@ const putmodel = new PutModel();
   res.send({ ok: true, message: 'Welcome to RESTful api server!', code: HttpStatus.OK });
 }); */
 
+
+
 var multer = require('multer');
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -23,11 +25,20 @@ var storage = multer.diskStorage({
       cb(null, Date.now()+'-'+file.originalname)
     }
 })
-var upload = multer({ storage: storage }).array('userfiles', 10);
+var upload = multer({ storage: storage })
+router.post('/file', upload.single('file'),(req, res, next) =>{
+   // req.files is array of `photos` files
+   // req.body will contain the text fields, if there were any
+  // const file =req.file;
+  console.log(req);
+  
+});
+
+var uploads = multer({ storage: storage }).array('userfiles', 10);
 
 
 router.post('/upload', function (req, res) {
-  upload(req, res, function (err) {
+  uploads(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         // A Multer error occurred when uploading.
         return res.status(500).json(err);

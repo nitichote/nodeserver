@@ -135,8 +135,8 @@ router.post('/dels', async (req: Request, res: Response) => {
 router.get('/gen-token', async (req: Request, res: Response) => {
   try {
     const payload = {
-      fullname: 'SATIT RIANPIT',
-      username: 'satit',
+      fullname: 'Chote',
+      username: 'nitichote',
       id: 1,
     };
 

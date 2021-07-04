@@ -28,8 +28,9 @@ import deleteRoute from './routes/deleteRoute';
 import dentclinicRoute from './routes/dentclinic/dentclinic';
 import hofficeRoute from './routes/hoffice/hoffice';
 import dentssjRoute from './routes/dentssj/dentssj';
+import dapp_clinicRoute from './routes/dentssj/dentssj';
 import gisspaceRoute from './routes/gisspace/gisspace';
-
+import capp2006Route from './routes/capp2006/capp2006';
 // Assign router to the express.Router() instance
 const app: express.Application = express();
 
@@ -58,6 +59,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   req.db4 = connetion.db('db_dentssjclub');
   req.db5 = connetion.db('db_dentalspec');
   req.db6 = connetion.db('db_kpirank');
+  req.db7 = connetion.db('db_dent2006');
   next();
 });
 
@@ -89,11 +91,13 @@ let checkAuth = (req: Request, res: Response, next: NextFunction) => {
     }
   );
 };
+app.use('/capp2006', capp2006Route);
 app.use('/kpiscore', kpiscoreRoute);
 app.use('/gisspace', gisspaceRoute);
 app.use('/dentssj', dentssjRoute);
 app.use('/hoffice', hofficeRoute);
 app.use('/dentclinic', dentclinicRoute);
+app.use('/dapp_clinic', dapp_clinicRoute);
 app.use('/update', updateRoute);
 app.use('/insert', insertRoute);
 app.use('/delete', deleteRoute);
