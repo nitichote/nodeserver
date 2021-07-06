@@ -216,6 +216,20 @@ router.get('/', async (req: Request, res: Response) => {
   }
   // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
 });
+router.get('/table/:tbl', async (req: Request, res: Response) => {
+  const db = req.db7;
+  const tbl = req.params.tbl;
+  try {
+    const raw = await db.raw(`select * from ${tbl}`);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({
+      ok: false,
+      message: 'there is an Error Connect to Database is.no ok',
+    });
+  }
+  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+});
 router.get('/txcodes', async (req: Request, res: Response) => {
   const db = req.db7;
   try {
