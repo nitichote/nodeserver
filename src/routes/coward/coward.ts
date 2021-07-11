@@ -160,14 +160,24 @@ router.post('/sql', async (req: Request, res: Response) => {
   let db = req.db8;
   // รูปแบบข้อมูล
   let data = req.body;
-
-  console.log(data.sql);
-
 let sql = data.sql;
-  //let dataUpdate = data.whereName;
- 
   try {
     const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  }
+});
+router.post('/login', async (req: Request, res: Response) => {
+  let db = req.db8;
+  // รูปแบบข้อมูล
+  let data = req.body;
+let user = data.user;
+let pass= data.pass;
+let sql=`select *  from hospital36 where off_id='${user}' and pincode= '${pass}'`;
+  try {
+    const raw = await db.raw(sql);
+    
     res.send({ ok: true, message: raw[0] });
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
