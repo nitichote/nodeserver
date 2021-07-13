@@ -77,7 +77,44 @@ router.post('/insertUpdate', async (req: Request, res: Response) => {
     res.send({ ok: true, rows: rows, code: HttpStatus.OK });
   }
 });
+router.post('/ampLogin', async (req: Request, res: Response) => {
+  let db = req.db7;
+  // รูปแบบข้อมูล
+  let data = req.body;
 
+  console.log(data.sql);
+
+
+let user = data.user;
+let pass = data.pass;
+  //let dataUpdate = data.whereName;
+  let sql = `select * from ampmember where username='${user}' and pincode ='${pass}'`;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  }
+});
+router.post('/login', async (req: Request, res: Response) => {
+  let db = req.db7;
+  // รูปแบบข้อมูล
+  let data = req.body;
+
+  console.log(data.sql);
+
+
+let user = data.user;
+let pass = data.pass;
+  //let dataUpdate = data.whereName;
+  let sql = `select * from hospital36 where off_id='${user}' and pincode ='${pass}'`;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  }
+});
 router.post('/insert', async (req: Request, res: Response) => {
   let db = req.db7;
   // รูปแบบข้อมูล
