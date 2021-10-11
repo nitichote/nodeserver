@@ -32,6 +32,7 @@ import dapp_clinicRoute from './routes/dentssj/dentssj';
 import gisspaceRoute from './routes/gisspace/gisspace';
 import capp2006Route from './routes/capp2006/capp2006';
 import cowardRoute from './routes/coward/coward';
+import coward36Route from './routes/coward36/coward36';
 // Assign router to the express.Router() instance
 const app: express.Application = express();
 
@@ -62,6 +63,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   req.db6 = connetion.db('db_kpirank');
   req.db7 = connetion.db('db_dent2006');
   req.db8 = connetion.db('db_cowards');
+  req.db9 = connetion.db('db_coward36');
   next();
 });
 
@@ -93,6 +95,7 @@ let checkAuth = (req: Request, res: Response, next: NextFunction) => {
     }
   );
 };
+app.use('/coward36', coward36Route);
 app.use('/coward', cowardRoute);
 app.use('/capp2006', capp2006Route);
 app.use('/kpiscore', kpiscoreRoute);

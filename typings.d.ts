@@ -10,6 +10,7 @@ declare module 'express' {
     db6:any;
     db7:any;
     db8:any;
+    db9:any;
     knex: Knex;
     decoded: any; // Actually should be something like `multer.Files`
   }
