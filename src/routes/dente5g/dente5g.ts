@@ -137,30 +137,58 @@ router.post('/del', async (req: Request, res: Response) => {
     res.send({ ok: false, rows: error, code: HttpStatus.NOT_FOUND });
   }
 });
+router.get('/dfvars', async (req: Request, res: Response) => {
+  const db = req.db10;
+
+  let sql = '';
+    sql = `select * from dfvars
+    `;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
+});
 router.get('/dentps', async (req: Request, res: Response) => {
   const db = req.db10;
   //const key = req.params.key;
  // const hn = req.params.hn;
   let sql = '';
-//  if (hn == 0) {
-    sql = `select d.* ,h.ampurcode ,h.pvcode  pv ,h.hoslevel ,h.hosname,h.hostype ,h.tumboncode ,s.specname ,l.slevelname,t.denttypename ,ps.positionname from dentpersonall d inner join hospitalr9 h on d.hcode =h.hcode left join speclevel l on d.level_id = l.slevel_id left join spectype s on d.speccode = s.speccode left join denttype t on d.denttype_id = t.denttype_id left join position ps on d.position_id = ps.position_id
-    `;
- // } else {
- //   sql = `select * from patient where hn='${hn}'`;
- // }
- // console.log(sql);
-
-  /* if (key == 'amp') {
-        sql = 'select ampcode,ampname,avg(percent) as pc from ohsp group by ampcode';
-     } */
+    sql = `select d.* ,h.ampurcode ,h.pvcode  pv ,h.hoslevel ,h.hosname,h.hostype ,h.tumboncode ,s.specname ,l.slevelname,t.denttypename ,ps.positionname from dentpersonall d inner join hospitalr9 h on d.hcode =h.hcode left join speclevel l on d.level_id = l.slevel_id left join spectype s on d.spectype_id = s.spectype_id left join denttype t on d.denttype_id = t.denttype_id left join position ps on d.position_id = ps.position_id  `;
   try {
     const raw = await db.raw(sql);
-
     res.send({ ok: true, message: raw[0] });
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
-  }
-  // res.send({ ok: false, message: 'Error Connect to Database is.' });
+  } 
+});
+router.get('/codetables', async (req: Request, res: Response) => {
+  const db = req.db10;
+  let sql = '';let sql2 = '';let sql3 = '';
+    sql = `select * from position`;
+    sql2 = `select * from spectype`;
+    sql3 = `select * from speclevel`;
+  try {
+    const spectype = await db.raw(sql2);
+    const position = await db.raw(sql);
+    const speclevel = await db.raw(sql3);
+
+    res.send({ ok: true, spectype: spectype[0], position: position[0], speclevel: speclevel[0], });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
+});
+router.get('/hospitals', async (req: Request, res: Response) => {
+  const db = req.db10;
+  let sql = '';
+    sql = `select * from hospitals`;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
 });
 router.get('/reportview/:rid', async (req: Request, res: Response) => {
   const db = req.db10;
