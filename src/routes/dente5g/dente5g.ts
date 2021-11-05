@@ -140,7 +140,7 @@ router.post('/del', async (req: Request, res: Response) => {
 router.get('/dfvars', async (req: Request, res: Response) => {
   const db = req.db10;
 
-  let sql = '';
+  let sql = 'xx';
     sql = `select * from dfvars
     `;
   try {
