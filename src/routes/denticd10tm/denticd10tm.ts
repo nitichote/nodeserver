@@ -64,7 +64,7 @@ router.post('/insertUpdate', async (req: Request, res: Response) => {
   let tableName = data.tableName;
   let dataUpdate = data.whereName;
   let formData = data.formData;
- // console.log(data);
+  console.log(data);
 
   try {
     let rows = await putmodel.insertData(db, tableName, formData);
@@ -85,7 +85,6 @@ router.post('/insert', async (req: Request, res: Response) => {
   let data = req.body.data;
   let tableName = data.tableName;
   let dataInsert = data.formData;
-//console.log(data);
 
   try {
     let rows = await putmodel.insertData(db, tableName, dataInsert);
@@ -138,6 +137,82 @@ router.post('/del', async (req: Request, res: Response) => {
     res.send({ ok: false, rows: error, code: HttpStatus.NOT_FOUND });
   }
 });
+router.get('/dfvars', async (req: Request, res: Response) => {
+  const db = req.db9;
+
+  let sql = 'xx';
+    sql = `select * from dfvars
+    `;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
+});
+router.get('/dentps', async (req: Request, res: Response) => {
+  const db = req.db9;
+  //const key = req.params.key;
+ // const hn = req.params.hn;
+  let sql = '';
+    sql = `select d.* ,h.ampurcode ,h.pvcode  pv ,h.hoslevel ,h.hosname,h.hostype ,h.tumboncode ,s.specname ,l.slevelname,t.denttypename ,ps.positionname from dentpersonall d inner join hospitalr9 h on d.hcode =h.hcode left join speclevel l on d.level_id = l.slevel_id left join spectype s on d.spectype_id = s.spectype_id left join denttype t on d.denttype_id = t.denttype_id left join position ps on d.position_id = ps.position_id  `;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
+});
+router.get('/codetables', async (req: Request, res: Response) => {
+  const db = req.db9;
+  let sql = '';let sql2 = '';let sql3 = '';
+    sql = `select * from position`;
+    sql2 = `select * from spectype`;
+    sql3 = `select * from speclevel`;
+  try {
+    const spectype = await db.raw(sql2);
+    const position = await db.raw(sql);
+    const speclevel = await db.raw(sql3);
+
+    res.send({ ok: true, spectype: spectype[0], position: position[0], speclevel: speclevel[0], });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
+});
+router.get('/icdgroup', async (req: Request, res: Response) => {
+  const db = req.db9;
+  let sql = '';
+    sql = `select * from icdgroup`;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
+});
+router.get('/icdlist', async (req: Request, res: Response) => {
+  const db = req.db9;
+  let sql = '';
+    sql = `select * from icd10tm_dental c inner join icdgroup g on c.group = g.gcode`;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
+});
+
+router.get('/hospitals', async (req: Request, res: Response) => {
+  const db = req.db9;
+  let sql = '';
+    sql = `select * from hospitals`;
+  try {
+    const raw = await db.raw(sql);
+    res.send({ ok: true, message: raw[0] });
+  } catch (error) {
+    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
+  } 
+});
 router.get('/reportview/:rid', async (req: Request, res: Response) => {
   const db = req.db9;
 
@@ -160,24 +235,14 @@ router.post('/sql', async (req: Request, res: Response) => {
   let db = req.db9;
   // รูปแบบข้อมูล
   let data = req.body;
+
+  console.log(data.sql);
+
 let sql = data.sql;
+  //let dataUpdate = data.whereName;
+ 
   try {
     const raw = await db.raw(sql);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
-  }
-});
-router.post('/login', async (req: Request, res: Response) => {
-  let db = req.db9;
-  // รูปแบบข้อมูล
-  let data = req.body;
-let user = data.user;
-let pass= data.pass;
-let sql=`select *  from hospital36 where off_id='${user}' and pincode= '${pass}'`;
-  try {
-    const raw = await db.raw(sql);
-    
     res.send({ ok: true, message: raw[0] });
   } catch (error) {
     res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
@@ -226,99 +291,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
   // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
 });
-router.get('/table/:tbl', async (req: Request, res: Response) => {
-  const db = req.db9;
-  const tbl = req.params.tbl;
-  try {
-    const raw = await db.raw(`select * from ${tbl}`);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-router.get('/test', async (req: Request, res: Response) => {
-  const db = req.db9;
-  try {
-    const raw = await db.raw(`select * from icd10tm_dental c inner join icdgroup g on c.group = g.gcode`);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-router.get('/pts', async (req: Request, res: Response) => {
-  const db = req.db9;
-  try {
-    const raw = await db.raw(`select *  from pt p,hospital36 h where p.hcode = h.off_id `);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-router.get('/pt1hos/:hcode', async (req: Request, res: Response) => {
-  const db = req.db9;
-  const hcode = req.params.hcode;
-  try {
-    const raw = await db.raw(`select *  from pt p,hospital36 h where p.hcode = h.off_id and hcode='${hcode}'`);
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-router.get('/pt', async (req: Request, res: Response) => {
-  const db = req.db9;
-  try {
-    const raw = await db.raw('select * from pt2006 limit 10');
-    res.send({ ok: true, message: raw[0] });
-  } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
-  }
-  // res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
-});
-router.get('/pt/:hn', async (req: Request, res: Response) => {
-  const db = req.db9;
-  const key = req.params.key;
-  const hn = req.params.hn;
-  let sql = '';
-  var char = hn.substring(0,1);;
-let s  = /^[0-9]$/.test(char);   
-  if (s) {
-    sql = `select * from pt2006 where ptcode ='${hn}'`;
-  } else {
-    sql = `select * from pt2006 where flname like '%${hn}%'`;
-  }
-  console.log(sql);
 
-  /* if (key == 'amp') {
-        sql = 'select ampcode,ampname,avg(percent) as pc from ohsp group by ampcode';
-     } */
-  try {
-    const raw = await db.raw(sql);
-
-    res.send({ ok: true, message: raw[0] ,sql,char});
-  } catch (error) {
-    res.send({ ok: false, message: 'Error Connect to Database is.no ok' });
-  }
-  // res.send({ ok: false, message: 'Error Connect to Database is.' });
-});
 router.get('/patient/:hn', async (req: Request, res: Response) => {
   const db = req.db9;
   const key = req.params.key;

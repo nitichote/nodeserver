@@ -34,6 +34,7 @@ import capp2006Route from './routes/capp2006/capp2006';
 import cowardRoute from './routes/coward/coward';
 import coward36Route from './routes/coward36/coward36';
 import dente5gRoute from './routes/dente5g/dente5g';
+import denticd10tmRoute from './routes/denticd10tm/denticd10tm';
 // Assign router to the express.Router() instance
 const app: express.Application = express();
 
@@ -97,6 +98,7 @@ let checkAuth = (req: Request, res: Response, next: NextFunction) => {
     }
   );
 };
+app.use('/denticd10tm', denticd10tmRoute);
 app.use('/dente5g', dente5gRoute);
 app.use('/coward36', coward36Route);
 app.use('/coward', cowardRoute);
