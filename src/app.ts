@@ -35,6 +35,8 @@ import cowardRoute from './routes/coward/coward';
 import coward36Route from './routes/coward36/coward36';
 import dente5gRoute from './routes/dente5g/dente5g';
 import denticd10tmRoute from './routes/denticd10tm/denticd10tm';
+import dentappointRoute from './routes/dentappoint/dentappoint';
+import dpsRoute from './routes/dps/dps';
 // Assign router to the express.Router() instance
 const app: express.Application = express();
 
@@ -67,6 +69,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   req.db8 = connetion.db('db_cowards');
   req.db9 = connetion.db('db_coward36');
   req.db10 = connetion.db('db_dentspec');
+  req.db11 = connetion.db('db_dentappoint');
+  req.db12 = connetion.db('db_dps');
   next();
 });
 
@@ -98,6 +102,8 @@ let checkAuth = (req: Request, res: Response, next: NextFunction) => {
     }
   );
 };
+app.use('/dps', dpsRoute);
+app.use('/dentappoint', dentappointRoute);
 app.use('/denticd10tm', denticd10tmRoute);
 app.use('/dente5g', dente5gRoute);
 app.use('/coward36', coward36Route);
