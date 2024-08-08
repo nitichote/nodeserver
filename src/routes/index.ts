@@ -8,25 +8,34 @@ const jwt = new Jwt();
 
 const router: Router = Router();
 
-/* router.get('/', (req: Request, res: Response) => {
-  res.send({ ok: true, message: 'Welcome to RESTful api server!', code: HttpStatus.OK });
-}); */
-
-router.get('/', async (req: Request, res: Response) => {
-  const db = req.db1;
+router.get('/status', async (req: Request, res: Response) => {
+  let db = req.db1;
   try {
-    const raw = await db.raw(
-      'select * from specperson s inner join hospital h on s.hcode= h.hcode limit 10'
-    );
-    res.send({ ok: true, message: raw[0] });
+    db.raw('select 1+1 as result');
+    res.send({ ok: true, message: 'Database connected successful.', code: HttpStatus.OK });
   } catch (error) {
-    res.send({
-      ok: false,
-      message: 'there is an Error Connect to Database is.no ok',
-    });
+    res.send({ ok: false, message: 'Error Connect to Database is.', code: HttpStatus.INTERNAL_SERVER_ERROR });
   }
-  res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+  res.send({ ok: false, message: 'Error Connect to Database is.', code: HttpStatus.INTERNAL_SERVER_ERROR });
 });
+
+// router.get('/', async (req: Request, res: Response) => {
+//   const db = req.db1;
+//   try {
+//     const raw = await db.raw(
+//       'select * from specperson s inner join hospital h on s.hcode= h.hcode limit 10'
+//     );
+//     res.send({ ok: true, message: raw[0] });
+//   } catch (error) {
+//     res.send({
+//       ok: false,
+//       message: 'there is an Error Connect to Database is.no ok',
+//     });
+//   }
+//   res.send({ ok: false, message: 'ok Error Connect to Database isvv.' });
+// });
+
+
 router.get('/specname', async (req: Request, res: Response) => {
   const db = req.db1;
   try {

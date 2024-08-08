@@ -4,7 +4,7 @@ import { Jwt } from '../../models/jwt';
 import * as HttpStatus from 'http-status-codes';
 import { PutModel } from '../../models/putModel';
 var formidable = require('formidable');
-var sharp = require('sharp');
+//var sharp = require('sharp');
 const jwt = new Jwt();
 
 const router: Router = Router();
@@ -92,7 +92,7 @@ router.post('/del', async (req: Request, res: Response) => {
     res.send({ ok: false, rows: error, code: HttpStatus.NOT_FOUND });
   }
 });
-router.post('/upload', async (req: Request, res: Response) => {
+/* router.post('/upload', async (req: Request, res: Response) => {
   let db = req.db4;
   // รูปแบบข้อมูล
   let data = req.body.data;
@@ -121,7 +121,7 @@ router.post('/upload', async (req: Request, res: Response) => {
   } catch (err) {
     res.send({ ok: false, err: err.message });
   }
-});
+}); */
 router.get('/', async (req: Request, res: Response) => {
   const db = req.db4;
   try {
